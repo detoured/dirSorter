@@ -5,47 +5,54 @@ import shutil
 
 
 def main():
+    extentions = {
+    "images" : ["jpg","jpeg","jpe","png"],
+    "videos" : ["mp4","mov", "avi", "mkv", "wmv"],
+    "documents" : ["txt","pdf"]
+    }
+
+    handle_argv(extentions)
+
     path = sys.argv[1]
     contents = os.listdir(f"{path}")
 
-    image_extentions = ["jpg","jpeg","jpe","png"]
-    video_extentions = ["mp4","mov", "avi", "mkv", "wmv"]
-    document_extentions = ["txt","pdf"]
+    files = assign_files(contents,extentions)
 
-    creare_dirs(path,contents)
-    move_files(path,assign_files(contents,image_extentions,video_extentions,document_extentions))
+    creare_dirs(path,contents,extentions,files)
 
-def creare_dirs(path,contents):
-    if "images" not in contents:
-        Path(f"{path}/images").mkdir()
+    move_files(path,files)
 
-    if "videos" not in contents:
-        Path(f"{path}/videos").mkdir()    
+def handle_argv(extentions):
+    if len(sys.argv) < 2:
+        print("Please provide a path to a dir")
+        sys.exit(1)
     
-    if "documents" not in contents:
-        Path(f"{path}/documents").mkdir()
+    for arg in range (0,len(sys.argv)):
+        if sys.argv[arg] == "-ae":
+            if sys.argv[arg+1] in extentions:
+                    extentions[sys.argv[arg+1]] += (sys.argv[arg+2]).split(",")
+            else:
+                extentions[sys.argv[arg+1]] = sys.argv[arg+2]
+    
 
-def assign_files(contents, image_extentions,video_extentions, document_extentions):
-    image_files = []
-    video_files = []
-    document_files = []
-
+def assign_files(contents, extentions):
+    files = {}
+    
     for file in contents:
-        if file.rsplit(".",1)[1] in image_extentions:
-            image_files.append(file)
-        elif file.rsplit(".",1)[1] in video_extentions:
-            video_files.append(file)
-        elif file.rsplit(".",1)[1] in document_extentions:
-            document_files.append(file)  
+        for ext in extentions:
+            if file.rsplit(".",1)[1] in extentions[ext]:
+                if ext not in files:
+                    files[ext] = []
+                files[ext].append(file)
+    return files
 
-    return image_files, video_files, document_files
+def creare_dirs(path,contents,extentions,files):
+    for ext in extentions:
+        if ext not in contents and ext in files:
+                Path(f"{path}/{ext}").mkdir()
 
 def move_files(path, files):
-    for file in files[0]:
-        shutil.move(f"{path}/{file}",f"{path}/images")
-    for file in files[1]:
-        shutil.move(f"{path}/{file}",f"{path}/videos")
-    for file in files[2]:
-        shutil.move(f"{path}/{file}",f"{path}/documents")
-
+    for file_type in files:
+        for file in files[file_type]:
+            shutil.move(f"{path}/{file}",f"{path}/{file_type}")
 main()
