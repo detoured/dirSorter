@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 import shutil
 
-
 def main():
     extentions = assign_defaults()
     
@@ -20,20 +19,11 @@ def main():
 
 def assign_defaults():
         with open("default_values.txt", "r") as file:
-            lines = {}
-            current_line = -1
             extentions = {}
-            content = file.read()
-            for charI in range(0,len(content)):
-                if charI == 0 or content[charI] == "\n":
-                    current_line += 1
-                    lines[current_line] = ""
-                    if content[charI] == "\n":
-                        continue
-                lines[current_line] += content[charI]
+            content = file.readlines()
 
-            for ext in range(0,len(lines)):
-                extentions[lines[ext].split(":")[0]] = lines[ext].split(":")[1].split(",")
+            for ext in range(0,len(content)):
+                extentions[content[ext].split(":")[0]] = content[ext].rstrip().split(":")[1].split(",")
             return extentions
 
 def handle_argv(extentions):
@@ -63,6 +53,7 @@ def assign_files(content, extentions):
                 if ext not in files:
                     files[ext] = []
                 files[ext].append(file)
+    print(files)
     return files
 
 def creare_dirs(path,content,extentions,files):
