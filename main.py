@@ -13,7 +13,7 @@ def main():
 
     files = assign_files(content,extentions)
 
-    creare_dirs(path,content,extentions,files)
+    creare_dirs(path,files)
 
     move_files(path,files)
 
@@ -22,8 +22,10 @@ def assign_defaults():
             extentions = {}
             content = file.readlines()
 
-            for ext in range(0,len(content)):
-                extentions[content[ext].split(":")[0]] = content[ext].rstrip().split(":")[1].split(",")
+            for line in content:
+                for ext in line.rstrip().split(":")[1].split(","):
+                    extentions[ext] = line.split(":")[0] 
+
             return extentions
 
 def handle_argv(extentions):
@@ -37,10 +39,9 @@ def handle_argv(extentions):
 
 def add_ext(extentions, arg):
         try:
-            if sys.argv[arg+1] in extentions:
-                    extentions[sys.argv[arg+1]] += (sys.argv[arg+2]).split(",")
-            else:
-                extentions[sys.argv[arg+1]] = sys.argv[arg+2]
+            for ext in sys.argv[arg+1].split(","):
+                if ext not in extentions:
+                    extentions[ext] = sys.argv[arg+2]
         except:
             print("Invalid [-ae] arguements.")
 
@@ -48,22 +49,23 @@ def assign_files(content, extentions):
     files = {}
     
     for file in content:
-        for ext in extentions:
-            if file.rsplit(".",1)[1] in extentions[ext]:
-                if ext not in files:
-                    files[ext] = []
-                files[ext].append(file)
-    print(files)
+        try:
+            file_ext = file.rsplit(".",1)[1]
+            if file_ext in extentions:
+                files[file] = extentions[file_ext]
+            else:
+                files[file] = "misq"
+        except:
+            continue
     return files
 
-def creare_dirs(path,content,extentions,files):
-    for ext in extentions:
-        if ext not in content and ext in files:
-                Path(f"{path}/{ext}").mkdir()
+def creare_dirs(path,files):
+        for file in files:
+                Path(f"{path}/{files[file]}").mkdir(exist_ok=True)
 
 def move_files(path, files):
-    for file_type in files:
-        for file in files[file_type]:
-            shutil.move(f"{path}/{file}",f"{path}/{file_type}")
-
+    for file in files:
+        shutil.move(f"{path}/{file}",f"{path}/{files[file]}")
+            
+     
 main()
