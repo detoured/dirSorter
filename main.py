@@ -7,9 +7,8 @@ import argparse
 def main():
     extentions = assign_defaults()
     
-    handle_argv(extentions)
+    path = handle_argv(extentions).path
 
-    path = sys.argv[1]
     content = os.listdir(f"{path}")
 
     files = assign_files(content,extentions)
@@ -41,6 +40,8 @@ def handle_argv(extentions):
         
     if args.add:
         add_ext(extentions, args.add)
+    
+    return args
 
 def add_ext(extentions, arg):
         try:
@@ -49,8 +50,12 @@ def add_ext(extentions, arg):
                 for ext in exts:
                     if ext not in extentions:
                         extentions[ext] = addition.rsplit("=")[1]
+                        continue
+                    del extentions[ext]
+                    extentions[ext] = addition.rsplit("=")[1]
         except:
             print("Invalid [--add] arguement/s.")
+            sys.exit(1)
 
 def assign_files(content, extentions):
     files = {}
