@@ -9,21 +9,23 @@ Usage format:
 python3 main.py <path_to_dir>
 ```
 
-> Add a custom extention to a custom directory
+> Map an extension to a directory
 ```
-python3 main.py <path_to_dir> <-ae> <ext1> <dir> 
-```
-
-> Add custom extentions to a custom directory
-```
-python3 main.py <path_to_dir> <-ae> <ext1,ext2,ext3> <dir> 
+python3 main.py <path_to_dir> --add/-a <ext1=dir> 
 ```
 
-> Add custom extentions to custom directories
+> Map multiple extensions to a directory
 ```
-python3 main.py <path_to_dir> <-ae> <ext1,ext2,ext3> <dir> <-ae> <ext4,ext5,ext6> <dir2> 
+python3 main.py <path_to_dir> --add/-a <ext1,ext2,ext3=dir> 
 ```
 
-* To alter the default settings to your liking, edit the defualt_values.txt file. Use this format: name:ext1,ext2,ext3
+> Map extensions to multiple directories
+```
+python3 main.py <path_to_dir> --add/-a <ext1,ext2,ext3=dir> --add/-a <ext4,ext5,ext6=dir2> 
+```
+
+* To alter the default settings to your liking, edit the default_values.txt file. Use this format: name:ext1,ext2,ext3
 
 * If you want to add a custom extension to a default directory, you use the same command as you would for a custom directory.
+
+* Extensions are case sensitive and should be provided without a leading dot.

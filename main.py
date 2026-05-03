@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 import shutil
+import argparse
 
 def main():
     extentions = assign_defaults()
@@ -29,21 +30,27 @@ def assign_defaults():
             return extentions
 
 def handle_argv(extentions):
-    if len(sys.argv) < 2:
+    parser = argparse.ArgumentParser(description="Directory Sorter")
+    parser.add_argument("path",type=str,help="path to the directory to sort")
+    parser.add_argument("-a","--add",action="append",type=str,help="add custom extensions and/or directories")
+    args = parser.parse_args()
+
+    if not args.path:
         print("Please provide a path to a directory")
         sys.exit(1)
-    
-    for arg in range (0,len(sys.argv)):
-        if sys.argv[arg] == "-ae":
-            add_ext(extentions, arg)
+        
+    if args.add:
+        add_ext(extentions, args.add)
 
 def add_ext(extentions, arg):
         try:
-            for ext in sys.argv[arg+1].split(","):
-                if ext not in extentions:
-                    extentions[ext] = sys.argv[arg+2]
+            for addition in arg:
+                exts = addition.rsplit("=")[0].split(",")
+                for ext in exts:
+                    if ext not in extentions:
+                        extentions[ext] = addition.rsplit("=")[1]
         except:
-            print("Invalid [-ae] arguements.")
+            print("Invalid [--add] arguement/s.")
 
 def assign_files(content, extentions):
     files = {}
@@ -60,8 +67,8 @@ def assign_files(content, extentions):
     return files
 
 def creare_dirs(path,files):
-        for file in files:
-                Path(f"{path}/{files[file]}").mkdir(exist_ok=True)
+    for file in files:
+            Path(f"{path}/{files[file]}").mkdir(exist_ok=True)
 
 def move_files(path, files):
     for file in files:
