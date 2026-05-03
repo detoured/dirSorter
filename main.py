@@ -48,11 +48,8 @@ def add_ext(extentions, arg):
             for addition in arg:
                 exts = addition.rsplit("=")[0].split(",")
                 for ext in exts:
-                    if ext not in extentions:
-                        extentions[ext] = addition.rsplit("=")[1]
-                        continue
-                    del extentions[ext]
                     extentions[ext] = addition.rsplit("=")[1]
+
         except:
             print("Invalid [--add] arguement/s.")
             sys.exit(1)
