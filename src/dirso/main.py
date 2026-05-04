@@ -18,7 +18,9 @@ def main():
     move_files(path,files)
 
 def assign_defaults():
-        with open("default_values.txt", "r") as file:
+        base_dir = os.path.dirname(__file__)
+        defaults_file = os.path.join(base_dir, "default_values.txt")
+        with open(defaults_file, "r") as file:
             extentions = {}
             content = file.readlines()
 
