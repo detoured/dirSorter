@@ -72,10 +72,9 @@ def assign_files(content, extentions):
 
 def creare_dirs(path,files):
     for file in files:
-            Path(f"{path}/{files[file]}").mkdir(exist_ok=True)
+        Path(f"{path}/{files[file]}").mkdir(exist_ok=True)
 
 def move_files(path, files):
     for file in files:
         shutil.move(f"{path}/{file}",f"{path}/{files[file]}")
             
-main()

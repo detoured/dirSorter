@@ -1,10 +1,13 @@
-# Directory Sorter
+# Dirso
 Organizes a directory by sorting files into separate subdirectories based on their file extensions.
 
+
 Installation:
+
 ```
-pipx install git+https://github.com/detoured/dirSorter.git
+pipx install git+https://github.com/detoured/Dirso.git
 ```
+
 
 Usage format:
 
