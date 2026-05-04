@@ -12,5 +12,8 @@ requires-python = ">=3.8"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+dirso = ["default_values.txt"]
+
 [project.scripts]
 dirso = "dirso.main:main"
